@@ -7,7 +7,7 @@
 ## Path to this repository (to be used as git sub-module)
 
 PWD          = $(shell pwd)
-DATADIR      = ..
+DATADIR     ?= ..
 FILTERDIR    = $(DATADIR)/filters
 RESOURCEDIR  = $(DATADIR)/resources
 RESOURCEPATH = .:./figs:$(DATADIR)
@@ -27,7 +27,7 @@ EVAL         = $(SRC:%.md=${ID}_%_eval.pdf)
 TMP1         = __titlepage.filled.tex
 TMP2         = __questions.filled.md
 
-TARGETDIR    = ../distr/
+TARGETDIR   ?= ../distr/
 
 
 

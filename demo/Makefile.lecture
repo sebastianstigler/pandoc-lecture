@@ -7,7 +7,7 @@
 ## Path to this repository (to be used as git sub-module)
 
 PWD          = $(shell pwd)
-DATADIR      = ..
+DATADIR     ?= ..
 FILTERDIR    = $(DATADIR)/filters
 RESOURCEDIR  = $(DATADIR)/resources
 RESOURCEPATH = .:./figs:$(DATADIR)
@@ -25,7 +25,7 @@ ID          ?= pm
 SLIDES       = $(SRC:%.md=${ID}_%.pdf)
 HTML         = $(SRC:%.md=${ID}_%.html)
 
-TARGETDIR    = ../distr/
+TARGETDIR   ?= ../distr/
 
 
 
