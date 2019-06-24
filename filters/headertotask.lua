@@ -14,6 +14,15 @@ function extendHeaders(el)
         table.insert(el.content, pandoc.Space())
         table.insert(el.content, pandoc.Str("Punkt" .. (p > 1 and "e" or "") .. ")"))
     end
+    local bp = tonumber(el.attributes["bonuspunkte"]) or 0
+    if bp > 0 then
+        table.insert(el.content, pandoc.Space())
+        table.insert(el.content, pandoc.RawInline("latex", "\\hfill"))
+        table.insert(el.content, pandoc.Space())
+        table.insert(el.content, pandoc.Str("(" .. bp))
+        table.insert(el.content, pandoc.Space())
+        table.insert(el.content, pandoc.Str("Punkt" .. (bp > 1 and "e" or "") .. ")"))
+    end
 
     return el
 end

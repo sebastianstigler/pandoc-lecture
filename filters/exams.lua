@@ -15,7 +15,11 @@ function headerToQuestion(el)
     local task = el.content
 
     -- add start of question to the front
-    table.insert(task, 1, pandoc.RawInline("latex", "\\myQuestion[" .. tostring(el.attributes["punkte"]) .. "]{"))
+    if el.attributes["bonuspunkte"] then
+       table.insert(task, 1, pandoc.RawInline("latex", "\\myBonusQuestion[" .. tostring(el.attributes["bonuspunkte"]) .. "]{"))
+    else
+        table.insert(task, 1, pandoc.RawInline("latex", "\\myQuestion[" .. tostring(el.attributes["punkte"]) .. "]{"))
+    end
     -- add end of question to the end
     table.insert(task, #task + 1, pandoc.RawInline("latex", "}"))
 
