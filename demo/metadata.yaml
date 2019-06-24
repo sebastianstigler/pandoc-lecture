@@ -9,5 +9,8 @@ link-citations: true
 # additional entries for exams
 LVKURZ: "Modulenumber ModuleSHORT, Year"
 NR: "Exam No."
+DURATION: "90"
+RESOURCES: >
+  Ein handschriftlich angefertigter DIN-A4-Zettel mit Notizen.
 ...
 

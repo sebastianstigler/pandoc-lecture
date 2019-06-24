@@ -25,20 +25,20 @@
     \begin{minipage}[c]{0.5\textwidth}
         \begin{minipage}[c]{0.96\textwidth}
             \vspace{2mm}
-            {\textbf{Bearbeitungszeit}: {\ }90 Minuten}\par
+            {\textbf{Bearbeitungszeit}: {\ }$DURATION$ Minuten}\par
             \bigskip
             \begin{itemize}
                 \item Bitte kontrollieren Sie die Vollständigkeit des an Sie
                 ausgegebenen Klausurexemplars.
                 \medskip
                 \item Tragen Sie auf dem Deckblatt Ihren Namen und die
-                Matrikelnummer ein und unterschreiben Sie die Klausur.
+                Matrikelnummer ein.
                 \medskip
                 \item Achten Sie auf Lesbarkeit und Nachvollziehbarkeit Ihrer
                 Antworten und Lösungswege.
                 \medskip
-                \item \textbf{Erlaubte Hilfsmittel}: Ein handschriftlich
-                angefertigter DIN-A4-Zettel mit Notizen.
+                \item \textbf{Erlaubte Hilfsmittel}: $RESOURCES$
+
 
                 \smallskip
                 Andere/Weitere Hilfsmittel sind \textbf{nicht} zugelassen. Die
@@ -67,14 +67,14 @@
                 Matr.-Nr.:& \dotfill \\[6mm]
 
                 \multicolumn{2}{l}{\begin{minipage}[c]{76mm}
-                                       Ich erkläre, daß ich mich zur Prüfung ordnungsgemäß angemeldet habe,
-                                       zur Prüfung zugelassen bin und mich prüfungsfähig fühle.
-                                       Ich werde die Klausur eigenständig bearbeiten und aus\-schließlich die
-                                       zugelassenen Hilfsmittel nutzen.
+               %                        Ich erkläre, daß ich mich zur Prüfung ordnungsgemäß angemeldet habe,
+               %                        zur Prüfung zugelassen bin und mich prüfungsfähig fühle.
+               %                        Ich werde die Klausur eigenständig bearbeiten und aus\-schließlich die
+               %                        zugelassenen Hilfsmittel nutzen.
                 \end{minipage}
                 }\\[22mm]
 
-                Unterschrift:& \dotfill
+               % Unterschrift:& \dotfill
             \end{tabular}
         \end{center}
         \smallskip
@@ -88,7 +88,7 @@
     \end{center}
     \begin{center}
         \begin{small}
-            \gradetable[h][questions]
+            \combinedgradetable[h][questions]
         \end{small}
     \end{center}
     \vspace{12mm}
@@ -97,7 +97,7 @@
         \textcolor{dkred}{\textbf{\Huge MUSTER}}
         \else
         \begin{tabular}{lp{1cm}lp{3cm}lp{3cm}}
-            Note:     & \dotfill & Minden, den & \dotfill & Unterschrift Erstprüfer: &
+            Note:     & \dotfill & Aalen, den & \dotfill & Unterschrift Prüfer: &
             \dotfill
         \end{tabular}
         \fi
@@ -109,7 +109,7 @@
 %------------------------------------- Custom Title Page ----------------
 
 %------------------------------------- Blank page after title page -----------------------------
-\Leerseite
+% \Leerseite
 %------------------------------------- Blank page after title page -----------------------------
 
 %------------------------------------- Begin of Questions --------------------------------------
