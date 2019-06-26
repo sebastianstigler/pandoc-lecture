@@ -96,7 +96,12 @@ function solution(el)
         el = pandoc.walk_block(el, { Table = mdtabletotabular })
 
         -- return list of blocks
-        return { pandoc.RawBlock("latex", "\\begin{streifenenv}"), pandoc.RawBlock("latex", solbeg), el, pandoc.RawBlock("latex", solend), pandoc.RawBlock("latex", "\\end{streifenenv}") }
+        local solutionl = { pandoc.RawBlock("latex", "\\begin{streifenenv}"), pandoc.RawBlock("latex", solbeg), el, pandoc.RawBlock("latex", solend)  }
+        if el.attributes["punkte"] then
+            table.insert(solutionl, pandoc.RawBlock("latex", "\\p{".. el.attributes["punkte"] .. "}"))
+        end
+        table.insert(solutionl, pandoc.RawBlock("latex", "\\end{streifenenv}"))
+        return solutionl
     end
 end
 
@@ -128,7 +133,7 @@ function multiplechoice(el)
     if el.classes[1] == "mc" then
 
         -- start of tabular
-        local tabular = { pandoc.RawBlock("latex", "\\begin{streifenenv}"), pandoc.RawBlock("latex", "\\mcstretch"), pandoc.RawBlock("latex", "\\begin{tabular}{ccp{0.82\\textwidth}}") }
+        local tabular = { pandoc.RawBlock("latex", "\\begin{streifenenv}"), pandoc.RawBlock("latex", "\\mcstretch"), pandoc.RawBlock("latex", "\\begin{tabular}{ccp{0.8\\textwidth}}") }
 
         -- create header
         local ok = tostring(el.attributes["ok"]) or "true"
@@ -143,11 +148,18 @@ function multiplechoice(el)
         table.insert(tabular, pandoc.RawBlock("latex", "\\rowrelax"))
 
         -- handle points
-        local points = tostring(el.attributes["points"]) or ""
-        table.insert(tabular, pandoc.RawBlock("latex", "\\x{" .. points .. "}"))
+        local points = tostring(el.attributes["points"])
+        if el.attributes["points"] then
+            table.insert(tabular, pandoc.RawBlock("latex", "\\x{" .. points .. "}"))
+        end
+
+        -- handle punkte
+        local punkte = tostring(el.attributes["punkte"])
+        if el.attributes["punkte"] then
+            table.insert(tabular, pandoc.RawBlock("latex", "\\p{" .. punkte .. "}"))
+        end
 
         -- end of solution
-        local points = tostring(el.attributes["points"]) or ""
         table.insert(tabular, pandoc.RawBlock("latex", "\\end{streifenenv}"))
 
         return tabular
