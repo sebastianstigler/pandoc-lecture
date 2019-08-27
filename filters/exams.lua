@@ -178,5 +178,34 @@ function answer(el)
 end
 
 
-return { { Header = headerToQuestion }, { Div = solution }, { Div = multiplechoice }, { Span = answer } }
+-- handling of `::: parts ... :::` ... (Div class)
+function parts(el)
+    if el.classes[1] == "parts" then
+        local partsl = { }
+        table.insert(partsl, pandoc.RawBlock("latex", "\\begin{parts}"))
+        table.insert(partsl, el)
+        table.insert(partsl, pandoc.RawBlock("latex", "\\end{parts}"))
+        if el.attributes["droppoints"] then
+            table.insert(partsl, pandoc.RawBlock("latex", "\\droptotalpoints"))
+        end
+        if el.attributes["dropbonuspoints"] then
+            table.insert(partsl, pandoc.RawBlock("latex", "\\droptotalbonuspoints"))
+        end
+        return partsl
+    end
+end
+
+-- handling of `[...]{.part`} ... (Span class)
+function part(el)
+    local name = el.classes[1]
+    if name == "part" or name == "bonuspart" then
+        local points = el.attributes["punkte"] and "[" .. tostring(el.attributes["punkte"]) .. "]" or ""
+        local content = el.content
+        table.insert(content, 1, pandoc.RawInline("latex", "\\" .. name .. points .. " "))
+        return content
+    end
+end
+
+
+return { { Header = headerToQuestion }, { Div = parts },  { Div = solution }, { Div = multiplechoice }, { Span = answer }, { Span = part } }
 

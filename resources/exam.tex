@@ -21,6 +21,9 @@
 %% `[...]{.answer}` will be translated by the lua filter into `\x{...}`
 \newcommand{\x}[1]{\ifprintanswers{\color{red}\bfseries#1\xspace}\fi}
 
+%% `[...]{.punkte}` will be printed in the lower right coner of a solution box
+\newcommand{\p}[1]{\vfill\ttfamily\bfseries#1\xspace}
+
 \newcommand{\Fortsetzung}{\begin{textblock*}{54mm}(80mm,276mm)\textsl{\textbf{Fortsetzung nächste Seite}}\end{textblock*}}
 \newcommand{\Leerseite}{\newpage\centerline{\textsl{\textbf{Leerseite}}}\newpage}
 %------------------------------------- CMDs ---------------------
@@ -69,7 +72,7 @@
 %------------------------------------- Grading Table --------------------------------
 \chqword{\textbf{Aufgabe}}
 \chpword{\textbf{Punkte}}
-\chbpword{\textbf{Bonuspunkte}}
+\chbpword{\textbf{Bonus}}
 \chsword{\raisebox{-1mm}[6mm][4mm]{\textbf{Erreicht}}}
 \chtword{\raisebox{-1mm}[6mm][4mm]{\textcolor{headcolor}{\LARGE\ensuremath{\;\;\;\pmb{\Sigma}\;\;\;}}}}
 %------------------------------------- Grading Table --------------------------------
@@ -85,28 +88,30 @@
 \ifprintanswers
 \header{}{\textcolor{dkred}{\textbf{\Huge LÖSUNG}}}{}
 \else
-\header{Name:}{Matrikelnummer:}{}
+\header{Name:}{Matrikelnummer:}{\thepage/\numpages}
 \fi
 \footrule
 %% footer-definition for single-sided printing (empty backside)
 %\footer{$LVKURZ$}{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}{Seite \thepage\ von \numpages}
 %% footer-definition for double-sided printing
 \lfoot{$LVKURZ$}
-\rfoot{Seite \thepage/\numpages}
 \cfoot{Klausur $if(PART)$$PART$ \xspace$endif$ $NR$}
+\rfoot{\framebox[1.5cm]{\rule{0pt}{.7cm}}}
 %------------------------------------- Custom Header ---------------------
 
 %------------------------------------- Questions --------------------------------
 \providecommand{\theMyQuestionTitle}{}
 \providecommand{\theMyBonusQuestionTitle}{}
-\providecommand{\myQuestion}[2][0]{\vskip11pt\renewcommand{\theMyQuestionTitle}{#2}\question[#1]{\ }\vskip5pt}
+\providecommand{\myQuestion}[2][0]{\vskip11pt\renewcommand{\theMyQuestionTitle}{#2}\ifnum0#1>0 \question[#1]\else \question \fi {\ }\vskip5pt}
 \providecommand{\myBonusQuestion}[2][0]{\vskip11pt\renewcommand{\theMyBonusQuestionTitle}{#2}\bonusquestion[#1]{\ }\vskip5pt}
-\qformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyQuestionTitle\hfill \fbox{\thepoints}}}}  % add only question points
-\bonusqformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyBonusQuestionTitle\hfill \fbox{\thepoints}}}}  % add only question points
 %\boxedpoints    % no effect w/ qformat
+\qformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyQuestionTitle}\hfill {\Large\texttt{\thepoints}}}}  % add only question points
+\bonusqformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyBonusQuestionTitle}\hfill {\Large\texttt{\thepoints}}}}  % add only question points
 \pointpoints{Punkt}{Punkte}
 \bonuspointpoints{Bonuspunkt}{Bonuspunkte}
-
+\totalformat{Punkte für Frage \thequestion: \totalpoints}
+\bonustotalformat{Bonuspunkte für Frage \thequestion: \totalbonuspoints}
+\renewcommand{\solutiontitle}{\noindent\textbf{Lösung:}\enspace}
 %------------------------------------- Questions --------------------------------
 
 
