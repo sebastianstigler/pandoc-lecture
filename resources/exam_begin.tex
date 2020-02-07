@@ -35,14 +35,19 @@
                 \item Achten Sie auf Lesbarkeit und Nachvollziehbarkeit Ihrer
                 Antworten und Lösungswege.
                 \medskip
-                \item \textbf{Erlaubte Hilfsmittel}: $RESOURCES$
-
-
-                \smallskip
-                Andere/Weitere Hilfsmittel sind \textbf{nicht} zugelassen. Die
-                Nutzung nicht zugelassener Hilfsmittel führt zur Bewertung
-                \enquote{nicht bestanden}.
             \end{itemize}
+            \textbf{Erlaubte Hilfsmittel}:
+                    \begin{itemize}
+                        $for(RESOURCES)$
+                        \item $RESOURCES$
+                        $endfor$
+                    \end{itemize}
+                \smallskip
+            {\color{dkred}Andere Hilfsmittel sind \textbf{nicht} zugelassen.
+
+            Die Nutzung nicht zugelassener Hilfsmittel führt zur Bewertung
+            \textbf{nicht bestanden (5,0)}!}
+
             \bigskip
             \medskip
             \textbf{Gutes Gelingen!}
@@ -78,6 +83,8 @@
         \smallskip
     \end{minipage}
     \par\hrulefill\par
+    \vspace{10mm}
+    $if(HINT)$\textbf{Hinweis:} $HINT$$endif$
     \vspace{10mm}
 
     \begin{center}
