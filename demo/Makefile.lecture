@@ -6,13 +6,17 @@
 
 ## Path to this repository (to be used as git sub-module)
 
+UID          = $(shell id -u)
+GID          = $(shell id -g)
 PWD          = $(shell pwd)
 DATADIR      = ..
 FILTERDIR    = $(DATADIR)/filters
 RESOURCEDIR  = $(DATADIR)/resources
 RESOURCEPATH = .:./figs:$(DATADIR)
+THEMEDIRSRC  = $(PWD)/$(DATADIR)/theme
+THEMEDIRDST  = /texmf
 
-PANDOC      ?= docker run --rm -v $(PWD):/pandoc -v $(PWD)/$(FILTERDIR):/filters -v $(PWD)/$(RESOURCEDIR):/resources debian-texlive pandoc
+PANDOC      ?= docker run -u $(UID):$(GID) --rm -v $(PWD):/pandoc -v $(PWD)/$(FILTERDIR):/filters -v $(PWD)/$(RESOURCEDIR):/resources -v $(THEMEDIRSRC)/:$(THEMEDIRDST) debian-texlive pandoc
 
 
 
@@ -38,8 +42,9 @@ OPTIONS       += --resource-path=${RESOURCEPATH}
 BEAMEROPTIONS  = -t beamer
 BEAMEROPTIONS += --pdf-engine=pdflatex
 BEAMEROPTIONS += --default-image-extension=pdf
-BEAMEROPTIONS += -V theme:metropolis
-BEAMEROPTIONS += -V themeoptions:numbering=none -V themeoptions:progressbar=foot
+# BEAMEROPTIONS += -V theme:metropolis
+BEAMEROPTIONS += -V theme:HsAalen
+# BEAMEROPTIONS += -V themeoptions:numbering=none -V themeoptions:progressbar=foot
 BEAMEROPTIONS += -V fontsize=smaller
 BEAMEROPTIONS += --strip-comments
 BEAMEROPTIONS += --slide-level=2

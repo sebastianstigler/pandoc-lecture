@@ -11,7 +11,17 @@
 % Default: 128mm x 96mm => 120mm text width
 \setbeamersize{text margin left=4mm}
 \setbeamersize{text margin right=4mm}
+\geometry{papersize={17cm,12.75cm}}
 
+\hsthemeB
+\topframetitlesinglelinefalse
+\topframetitletrue
+\IfFileExists{./titlegraphic.png}{%
+    \titleimgtrue%
+    \titleimage{titlegraphic}%
+}{\titleimgfalse}
+
+\renewcommand{\UrlFont}{\color{hsblue3}\sf}
 %% Chance color theme (cf. metropolis theme manual)
 %\useoutertheme{metropolis}
 %\useinnertheme{metropolis}

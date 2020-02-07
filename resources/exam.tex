@@ -8,6 +8,7 @@
 \usepackage{colortbl}
 \usepackage{wasysym}    % \Square
 \usepackage{ifoddpage}
+\usepackage{calc}
 %------------------------------------- Packages ----------------
 
 %------------------------------------- Settings ---------------------
@@ -19,10 +20,12 @@
 \newcommand{\hsheadfont}{\fontfamily{phv}\fontseries{b}\fontshape{n}\selectfont}
 
 %% `[...]{.answer}` will be translated by the lua filter into `\x{...}`
-\newcommand{\x}[1]{\ifprintanswers{\color{red}\bfseries#1\xspace}\fi}
+\newcommand{\x}[1]{\ifprintanswers{\color{red}#1\xspace}\fi}
+\newcommand{\X}[2][0pt]{\ifprintanswers{\color{red}#2\xspace}\else\rule{0pt}{1cm}{\color{headcolor}\rule{#1}{1pt}}\fi}
+\newcommand{\y}[1]{\colorbox{yellow}{#1}}
 
 %% `[...]{.punkte}` will be printed in the lower right coner of a solution box
-\newcommand{\p}[1]{\vfill\ttfamily\bfseries#1\xspace}
+\newcommand{\p}[1]{\vfill{\tiny\ttfamily\bfseries#1\xspace}}
 
 \newcommand{\Fortsetzung}{\begin{textblock*}{54mm}(80mm,276mm)\textsl{\textbf{Fortsetzung nächste Seite}}\end{textblock*}}
 \newcommand{\Leerseite}{\newpage\centerline{\textsl{\textbf{Leerseite}}}\newpage}
@@ -31,14 +34,42 @@
 %------------------------------------- Listings ---------------------
 %% settings for pandoc option `--listings`
 \usepackage{listings}  
-\lstset{basicstyle=\footnotesize\ttfamily\mdseries, xleftmargin=\bigskipamount, keywordstyle=\bfseries\color{dkblue}, identifierstyle=\ttfamily, commentstyle=\bfseries\color{gray}\textsl, stringstyle=\color{magenta}\upshape, emphstyle=\color{red}, emphstyle={[2]\color{blue}}, texcl=false, showspaces=false, showstringspaces=false, numbers=left, numberstyle=\footnotesize, breaklines=true, tabsize=4, backgroundcolor=\color{listinggray}, frame=shadowbox}
+\lstset{basicstyle=\ttfamily\mdseries,
+    xleftmargin=\bigskipamount,
+    keywordstyle=\bfseries\color{dkblue},
+    identifierstyle=\ttfamily,
+    commentstyle=\bfseries\color{gray}\textsl,
+    stringstyle=\color{magenta}\upshape,
+    emphstyle=\color{red},
+    emphstyle={[2]\color{blue}},
+    texcl=false,
+    showspaces=false,
+    showstringspaces=false,
+    numbers=none,
+    numberstyle=\footnotesize,
+    breaklines=true,
+    tabsize=4,
+    backgroundcolor=\color{listinggray},
+    escapeinside={(*}{*)},
+    frame=shadowbox,
+    captionpos=b,
+    literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+    {~}{{\textasciitilde}}1
+}
 %------------------------------------- Listings ---------------------
 
 %------------------------------------- Tables (left column gray background) --------------------------------
 \newenvironment{streifenenv}
 {
     \smallskip
-    \begin{tabular}{>{\columncolor{headcolor}}p{1pt}p{0.86\textwidth}}
+    \begin{tabular}{>{\columncolor{headcolor}}p{1mm}p{0.86\textwidth}}
         &
         \begin{minipage}{0.86\textwidth}
 }
@@ -86,7 +117,7 @@
 \pagestyle{headandfoot}     %% from exam.cls
 \headrule
 \ifprintanswers
-\header{}{\textcolor{dkred}{\textbf{\Huge LÖSUNG}}}{}
+\header{}{\textcolor{dkred}{\textbf{\Huge LÖSUNG}}}{\thepage/\numpages}
 \else
 \header{Name:}{Matrikelnummer:}{\thepage/\numpages}
 \fi
@@ -105,14 +136,81 @@
 \providecommand{\myQuestion}[2][0]{\vskip11pt\renewcommand{\theMyQuestionTitle}{#2}\ifnum0#1>0 \question[#1]\else \question \fi {\ }\vskip5pt}
 \providecommand{\myBonusQuestion}[2][0]{\vskip11pt\renewcommand{\theMyBonusQuestionTitle}{#2}\bonusquestion[#1]{\ }\vskip5pt}
 %\boxedpoints    % no effect w/ qformat
-\qformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyQuestionTitle}\hfill {\Large\texttt{\thepoints}}}}  % add only question points
-\bonusqformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyBonusQuestionTitle}\hfill {\Large\texttt{\thepoints}}}}  % add only question points
+\qformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyQuestionTitle}\hfill {\Large\texttt{\totalpoints+\totalbonuspoints\textsuperscript{*} Punkte}}}}  % add only question points
+\bonusqformat{\textbf{\textcolor{headcolor}{\Large $if(PART)$$PART$.$endif$\thequestion: \theMyBonusQuestionTitle}\hfill {\Large\texttt{\totalpoints+\totalbonuspoints\textsuperscript{*} Punkte}}}}  % add only question points
 \pointpoints{Punkt}{Punkte}
-\bonuspointpoints{Bonuspunkt}{Bonuspunkte}
+\bonuspointpoints{\hspace{-0.2em}\textsuperscript{*} Punkt}{\hspace{-0.2em}\textsuperscript{*} Punkte}
 \totalformat{Punkte für Frage \thequestion: \totalpoints}
 \bonustotalformat{Bonuspunkte für Frage \thequestion: \totalbonuspoints}
 \renewcommand{\solutiontitle}{\noindent\textbf{Lösung:}\enspace}
 %------------------------------------- Questions --------------------------------
 
 
+\usepackage{etex,environ,refcount}
 
+\globtoksblk\savedenvtoks{1000}
+\newcounter{savedenvcount}
+
+\NewEnviron{savedenv}[1][]{%
+  \refstepcounter{savedenvcount}%
+  \if\relax\detokenize{#1}\relax
+  \else
+    \label{#1}%
+  \fi
+  \global\toks\numexpr\savedenvtoks+\value{savedenvcount}\relax=\expandafter{\BODY}%
+}
+\toks\savedenvtoks={??}
+
+\newcommand{\printsaved}[1]{%
+  \the\toks\numexpr\savedenvtoks+\getrefnumber{#1}\relax
+}
+
+\makeatletter
+\newcommand{\printallsaved}{%
+  \@tempcnta=\z@
+  \loop
+    \ifnum\@tempcnta<\value{savedenvcount}
+    \advance\@tempcnta\@ne
+    \the\toks\numexpr\savedenvtoks+\@tempcnta\relax\par
+  \repeat
+}
+\makeatother
+
+\newcommand{\bp}{{\textsuperscript{*} }}
+
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{calc}
+
+\tcbset{
+  toplength/.store in={\tcbcornerruletoplength},
+  leftlength/.store in={\tcbcornerruleleftlength},
+  toplength=2cm,
+  leftlength=2cm,
+  bottomlength/.store in={\tcbcornerrulebottomlength},
+  rightlength/.store in={\tcbcornerrulerightlength},
+  bottomlength=2cm,
+  rightlength=2cm,
+  cornerruleshift/.store in={\tcbcornerruleshift},
+  cornerruleshift=1pt,
+  topcornercolor/.store in={\tcbtopcornercolor},
+  bottomcornercolor/.store in={\tcbbottomcornercolor},
+  topcornercolor=headcolor,
+  bottomcornercolor=headcolor,
+}
+
+\newtcolorbox{cornerbox}[1][]{%
+  enhanced jigsaw,
+  sharp corners,
+  boxrule=0pt,
+  underlay={
+    \coordinate (topend) at ($$(frame.north west) + (0:\tcbcornerruletoplength)$$);
+    \coordinate (leftend) at ($$(frame.north west) - (90:\tcbcornerruleleftlength)$$);
+    \coordinate (bottomend) at ($$(frame.south east) - (0:\tcbcornerrulebottomlength)$$);
+    \coordinate (rightend) at ($$(frame.south east) + (90:\tcbcornerrulerightlength)$$);
+    \draw[line width=2pt,\tcbtopcornercolor] ([xshift=-\tcbcornerruleshift]leftend) -- ([shift={(-\tcbcornerruleshift,\tcbcornerruleshift)}]frame.north west) -- ([shift={(-\tcbcornerruleshift,\tcbcornerruleshift)}] topend);
+    \draw[line width=2pt,\tcbbottomcornercolor] ([xshift=\tcbcornerruleshift]rightend) -- ([shift={(\tcbcornerruleshift,-\tcbcornerruleshift)}]frame.south east) -- ([shift={(-\tcbcornerruleshift,-\tcbcornerruleshift)}] bottomend);
+  },
+  #1,
+}
+\newcommand{\cornerboxbegin}{\begin{cornerbox} \begin{minipage}{\textwidth}}
+\newcommand{\cornerboxend}{\end{minipage} \end{cornerbox}}

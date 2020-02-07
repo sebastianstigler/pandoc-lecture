@@ -18,7 +18,11 @@ function headerToQuestion(el)
     if el.attributes["bonuspunkte"] then
        table.insert(task, 1, pandoc.RawInline("latex", "\\myBonusQuestion[" .. tostring(el.attributes["bonuspunkte"]) .. "]{"))
     else
-        table.insert(task, 1, pandoc.RawInline("latex", "\\myQuestion[" .. tostring(el.attributes["punkte"]) .. "]{"))
+        if el.attributes["punkte"] then
+            table.insert(task, 1, pandoc.RawInline("latex", "\\myQuestion[" .. tostring(el.attributes["punkte"]) .. "]{"))
+        else
+            table.insert(task, 1, pandoc.RawInline("latex", "\\myQuestion{"))
+        end
     end
     -- add end of question to the end
     table.insert(task, #task + 1, pandoc.RawInline("latex", "}"))
@@ -98,10 +102,21 @@ function solution(el)
         -- return list of blocks
         local solutionl = { pandoc.RawBlock("latex", "\\begin{streifenenv}"), pandoc.RawBlock("latex", solbeg), el, pandoc.RawBlock("latex", solend)  }
         if el.attributes["punkte"] then
-            table.insert(solutionl, pandoc.RawBlock("latex", "\\p{".. el.attributes["punkte"] .. "}"))
+            table.insert(solutionl, pandoc.RawBlock("latex", "\\bigskip\\p{".. el.attributes["punkte"] .. "}"))
         end
         table.insert(solutionl, pandoc.RawBlock("latex", "\\end{streifenenv}"))
         return solutionl
+    end
+end
+
+-- handling of `::: printlater ... ###` ... (Div class)
+function printlater(el)
+    if el.classes[1] == "printlater" then
+        local laterbeg = "\\begin{savedenv}"
+        local laterend = "\\end{savedenv}"
+        el = pandoc.walk_block(el, {Table = mdtabletotabular})
+        return { pandoc.RawBlock("latex", laterbeg), el, pandoc.RawBlock("latex", laterend) }
+
     end
 end
 
@@ -201,11 +216,12 @@ function part(el)
     if name == "part" or name == "bonuspart" then
         local points = el.attributes["punkte"] and "[" .. tostring(el.attributes["punkte"]) .. "]" or ""
         local content = el.content
-        table.insert(content, 1, pandoc.RawInline("latex", "\\" .. name .. points .. " "))
+        table.insert(content, 1, pandoc.RawInline("latex", "\\" .. name .. points .. " \\textcolor{headcolor}{ "))
+        table.insert(content, pandoc.RawInline("latex", "}"))
         return content
     end
 end
 
 
-return { { Header = headerToQuestion }, { Div = parts },  { Div = solution }, { Div = multiplechoice }, { Span = answer }, { Span = part } }
+return { { Header = headerToQuestion }, { Div = parts },  { Div = solution }, { Div = multiplechoice }, { Div = printlater }, {Div = questions }, { Span = answer }, { Span = part } }
 
