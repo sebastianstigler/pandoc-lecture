@@ -1,23 +1,35 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
-# https://www.debian.org/distrib/packages
+RUN mkdir -p /usr/share/man/man1
+# https://www.debian.org/distrib/package
+RUN apt-get update
 RUN apt-get update && apt-get install -y --no-install-recommends         \
-        apt-utils bash wget make graphviz pdftk biber                    \
+        apt-utils bash git wget make graphviz pdftk biber dvipng         \
         texlive-base texlive-latex-base                                  \
         texlive-latex-recommended texlive-latex-extra                    \
         texlive-science texlive-pictures                                 \
         texlive-bibtex-extra texlive-lang-english texlive-lang-german    \
         texlive-font-utils texlive-fonts-recommended                     \
-        fontconfig lmodern ghostscript gsfonts                           \
-        texlive-generic-recommended                                      \
+        texlive-fonts-extra fontconfig lmodern ghostscript gsfonts       \
+        texlive-generic-recommended texlive-xetex                        \
+        fonts-noto-color-emoji fonts-symbola \
+        asciidoc-base asciidoc-common asciidoc-dblatex asciidoc-fop      \
+        source-highlight                                                 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # https://github.com/jgm/pandoc/releases/latest
 RUN wget https://github.com/jgm/pandoc/releases/download/2.7.1/pandoc-2.7.1-1-amd64.deb && \
-    dpkg -i pandoc* &&                                                                         \
-    rm pandoc* &&                                                                              \
+    dpkg -i pandoc* &&                                                                     \
+    rm pandoc* &&                                                                          \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN useradd -m  user ; chown user:user /home/user
+
+
+
+USER user
+
+ADD asciidoc-home.tgz /home/user
 # Working directory
 WORKDIR /pandoc
 
