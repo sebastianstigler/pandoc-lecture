@@ -1,0 +1,15 @@
+{
+  "project_name": "Projekt",
+  "title": "Titel",
+  "subtitle": "Subtitle",
+
+  "full_name": "Sebastian Stigler",
+  "email": "sebastian.stigler@hs-aalen.de",
+  "institute": "Hochschule Aalen - Technik und Wirtschaft",
+
+  "date": "\\\\today",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "open_source_license": ["MIT license", "BSD license", "ISC license", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"],
+  "create_git": ["y", "n"],
+  "_copy_without_render": ["*.sty", "*.png", "*.bib", "*.pdf", "Makefile"]
+}

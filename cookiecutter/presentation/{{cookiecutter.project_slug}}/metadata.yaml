@@ -1,0 +1,8 @@
+---
+author: "{{ cookiecutter.full_name }} <{{ cookiecutter.email }}>"
+institute: "{{ cookiecutter.institute }}"
+lang: de-DE
+bibliography: literature.bib
+link-citations: true
+...
+
