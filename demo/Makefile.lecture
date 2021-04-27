@@ -14,7 +14,7 @@ FILTERDIR    = $(DATADIR)/filters
 RESOURCEDIR  = $(DATADIR)/resources
 RESOURCEPATH = .:./figs:$(DATADIR)
 THEMEDIRSRC  = $(PWD)/$(DATADIR)/theme
-THEMEDIRDST  = /texmf
+THEMEDIRDST  = /home/user/texmf
 
 PANDOC      ?= docker run -u $(UID):$(GID) --rm -v $(PWD):/pandoc -v $(PWD)/$(FILTERDIR):/filters -v $(PWD)/$(RESOURCEDIR):/resources -v $(THEMEDIRSRC)/:$(THEMEDIRDST) debian-texlive pandoc
 
@@ -51,7 +51,7 @@ BEAMEROPTIONS += --slide-level=2
 BEAMEROPTIONS += --lua-filter=${FILTERDIR}/tex.lua
 BEAMEROPTIONS += --include-in-header=${RESOURCEDIR}/definitions.tex
 BEAMEROPTIONS += --include-in-header=${RESOURCEDIR}/beamer.tex
-BEAMEROPTIONS += --filter pandoc-citeproc
+BEAMEROPTIONS += --citeproc
 BEAMEROPTIONS += -M suppress-bibliography=true -M link-citations=false
 BEAMEROPTIONS += $(OPTIONS)
 
@@ -67,7 +67,7 @@ HTMLOPTIONS   += --css=${RESOURCEDIR}/html.css
 HTMLOPTIONS   += --include-in-header=${RESOURCEDIR}/mathjaxurl.html
 # use MathJax; URL points to blank dummy document to prevent incorporating MathJax into the generated HTML document when using --self-contained
 HTMLOPTIONS   += --mathjax=${RESOURCEDIR}/dummy.js
-HTMLOPTIONS   += --filter pandoc-citeproc
+HTMLOPTIONS   += --citeproc
 HTMLOPTIONS   += --lua-filter=${FILTERDIR}/fhbib.lua
 HTMLOPTIONS   += $(OPTIONS)
 

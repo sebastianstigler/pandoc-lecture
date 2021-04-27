@@ -18,7 +18,7 @@ FILTERDIR    = $(DATADIR)/filters
 RESOURCEDIR  = $(DATADIR)/resources
 RESOURCEPATH = .:./figs:$(DATADIR)
 THEMEDIRSRC  = $(DOCKERDATADIR)/theme
-THEMEDIRDST  = /texmf
+THEMEDIRDST  = /home/user/texmf
 
 PANDOC      ?= docker run -u $(UID):$(GID) --rm -v $(PWD):/pandoc -v $(DOCKERFILTERDIR):/filters -v $(DOCKERRESOURCEDIR):/resources -v $(THEMEDIRSRC)/:$(THEMEDIRDST) debian-texlive pandoc
 
@@ -70,7 +70,7 @@ HTMLOPTIONS   += --css=${RESOURCEDIR}/html.css
 HTMLOPTIONS   += --include-in-header=${RESOURCEDIR}/mathjaxurl.html
 # use MathJax; URL points to blank dummy document to prevent incorporating MathJax into the generated HTML document when using --self-contained
 HTMLOPTIONS   += --mathjax=${RESOURCEDIR}/dummy.js
-HTMLOPTIONS   += --filter pandoc-citeproc
+HTMLOPTIONS   += --citeproc
 HTMLOPTIONS   += --lua-filter=${FILTERDIR}/fhbib.lua
 HTMLOPTIONS   += $(OPTIONS)
 
